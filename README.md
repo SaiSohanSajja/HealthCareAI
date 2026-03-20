@@ -108,10 +108,6 @@ A hybrid architecture combining:
 
 ### 🔹 Classification Performance
 
-[[358, 5],
-[ 9, 204]]
-
-
 | Metric        | No Tumor | Tumor |
 |--------------|---------|-------|
 | Precision     | 0.98    | 0.98  |
@@ -188,5 +184,3 @@ Together, they form a powerful system capable of assisting medical professionals
 
 ---
 - **Accuracy**: 97.57%
-
-#### Confusion Matrix:

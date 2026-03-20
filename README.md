@@ -1,160 +1,192 @@
-# 🧠 Brain Tumor Segmentation using Deep Learning
+# 🧠 Brain Tumor Detection and Segmentation using Deep Learning
 
-## 🧠 Overview
+## 📌 Overview
+This project presents a deep learning-based pipeline for **automated brain tumor detection and segmentation** from MRI scans. The system follows a **two-stage approach**:
 
-This project presents a deep learning-based approach for brain tumor segmentation using MRI scans. The model performs pixel-wise prediction, identifying tumor regions within the brain rather than simply classifying presence or absence.
+1. **Classification (Tumor / No Tumor)** using ResNet50  
+2. **Segmentation (Tumor Localization)** using ResUNet  
+
+The models achieve:
+- ✅ **97.57% Classification Accuracy**
+- ✅ **0.89 Dice Coefficient for Segmentation**
+
+This pipeline can assist medical professionals in **early diagnosis and treatment planning**.
 
 ---
 
-## 🎯 Objective
+## 🎯 Problem Statement
+The task is divided into two sub-problems:
 
-The goal is to:
-- Segment tumor regions from MRI scans  
-- Learn spatial patterns of tumors  
-- Generate interpretable visual outputs  
+- **Binary Classification**  
+  Detect whether a brain MRI contains a tumor.
 
----
-
-## 🏗️ Problem Formulation
-
-Binary image segmentation:
-
-| Class | Meaning |
-|------|--------|
-| 0 | Background |
-| 1 | Tumor |
+- **Semantic Segmentation**  
+  Identify and outline the exact tumor region at the pixel level.
 
 ---
 
 ## 📊 Dataset
+- **Source**: LGG MRI Segmentation Dataset (Kaggle)
+- **Total Samples**: 3929 MRI scans
 
-- Input: Brain MRI images  
-- Target: Corresponding segmentation masks  
+| Class        | Samples |
+|-------------|--------|
+| No Tumor     | 2556   |
+| Tumor        | 1373   |
+
+⚠️ The dataset is **imbalanced**, which influences model training.
 
 Each sample contains:
-- MRI image  
-- Ground truth mask  
+- MRI Image  
+- Corresponding Segmentation Mask  
+- Binary Label (0 / 1)
 
 ---
 
-## ⚙️ Methodology
+## 🧠 Model Architecture
 
-### Data Preprocessing
-- Resizing images  
-- Normalization  
-- Mask alignment  
+### 🔹 1. Tumor Classification (ResNet50)
 
-### Model Architecture
-- CNN-based encoder-decoder model  
-- Encoder extracts features  
-- Decoder reconstructs segmentation mask  
+- **Backbone**: Pretrained ResNet50 (ImageNet)
+- **Strategy**: Transfer Learning (Frozen base layers)
 
-### Training
-- Loss: Binary Crossentropy / Dice Loss  
-- Optimizer: Adam  
+#### Custom Head:
+- AveragePooling2D
+- Flatten
+- Dense (256, ReLU) + Dropout (0.3)
+- Dense (256, ReLU) + Dropout (0.3)
+- Output Layer (Softmax, 2 classes)
 
-### Pipeline
-MRI Image → Preprocessing → Model → Predicted Mask  
+📌 Purpose:
+Efficient feature extraction + fast convergence
+
+---
+
+### 🔹 2. Tumor Segmentation (ResUNet)
+
+A hybrid architecture combining:
+- **ResNet-style residual blocks**
+- **U-Net encoder-decoder structure**
+
+#### Key Components:
+- Encoder → Feature extraction + downsampling  
+- Bottleneck → Deep feature representation  
+- Decoder → Upsampling + skip connections  
+- Output → Sigmoid activation (binary mask)
+
+#### Highlights:
+- Residual connections improve gradient flow  
+- Skip connections preserve spatial details  
+- Designed for **pixel-level precision**
+
+---
+
+## ⚙️ Training Setup
+
+### 🔹 Classification Model
+- Loss: `categorical_crossentropy`
+- Optimizer: Adam
+- Metric: Accuracy
+- Image Size: 256 × 256
+- Batch Size: 16
+- Data Augmentation: Normalization (1/255)
+
+---
+
+### 🔹 Segmentation Model
+- Loss: **Focal Tversky Loss**
+- Optimizer: Adam (LR = 0.05)
+- Metric: Tversky Index
+
+📌 Why Focal Tversky?
+- Handles **class imbalance**
+- Focuses on difficult tumor regions
 
 ---
 
 ## 📈 Results
 
-### Quantitative (Add your values)
+### 🔹 Classification Performance
 
-| Metric | Score |
-|------|------|
-| Dice Coefficient | XX |
-| Accuracy | XX |
+[[358, 5],
+[ 9, 204]]
 
----
 
-## 🖼️ Sample Outputs
+| Metric        | No Tumor | Tumor |
+|--------------|---------|-------|
+| Precision     | 0.98    | 0.98  |
+| Recall        | 0.99    | 0.96  |
+| F1-score      | 0.98    | 0.97  |
 
-![Sample 1](outputs/sample1.png)  
-![Sample 2](outputs/sample2.png)  
-
-### Visualization Explanation
-Each sample shows:
-- Original MRI  
-- Ground Truth Mask  
-- Predicted Mask  
-- Overlay comparison  
+✅ Strong performance across all metrics  
+✅ Low false positives and false negatives  
 
 ---
 
-## 📊 Training Visualization
+### 🔹 Segmentation Performance
 
-![Training Curve](outputs/training_curve.png)
+- **Dice Coefficient**: **0.89**
 
----
-
-## 🔬 Observations
-
-- Good tumor localization  
-- Strong overlap with ground truth  
-- Minor boundary errors  
-- Small tumors harder to detect  
+📌 Interpretation:
+- High overlap between predicted and true tumor regions  
+- Accurate boundary detection  
 
 ---
 
-## 💡 Key Contributions
+## 🔍 Key Insights
 
-- Pixel-wise tumor segmentation  
-- End-to-end deep learning pipeline  
-- Visual interpretation using overlays  
+- Transfer learning with ResNet50 significantly improves classification performance  
+- ResUNet effectively captures both **global context and fine details**  
+- Focal Tversky Loss helps overcome class imbalance in segmentation  
+- Two-stage pipeline improves reliability compared to single-model approaches  
+
+---
+
+## 🚀 Applications
+
+- Clinical decision support systems  
+- Automated radiology workflows  
+- Early tumor detection  
+- Treatment planning and monitoring  
 
 ---
 
 ## ⚠️ Limitations
 
-- Depends on dataset quality  
-- Boundary precision is limited  
-- No 3D context (2D slices only)  
+- Dataset imbalance may affect generalization  
+- Limited to LGG tumor type  
+- Real-world deployment requires multi-modal MRI validation  
 
 ---
 
-## 🚀 Future Work
+## 🔮 Future Work
 
-- Use U-Net / advanced architectures  
-- Apply data augmentation  
-- Extend to 3D MRI  
-- Improve boundary detection  
-
----
-
-## 📁 Project Structure
-
-Healthcare_AI/
-├── Copy_of_Healthcare_AI.ipynb  
-├── dataset/  
-├── outputs/  
+- Extend to multi-class tumor classification  
+- Use 3D CNNs for volumetric segmentation  
+- Deploy as a real-time web/clinical tool  
+- Integrate explainability (Grad-CAM)
 
 ---
 
-## ▶️ How to Run
+## 📚 References
 
-1. Open notebook in Colab/Jupyter  
-2. Load dataset  
-3. Run all cells  
-4. Train model  
-5. View outputs  
-
----
-
-## 📦 Requirements
-
-pip install tensorflow keras opencv-python numpy matplotlib  
+- ResNet Paper: Deep Residual Learning for Image Recognition  
+- Transfer Learning Resources  
+- Focal Tversky Loss Implementation  
+- CNN Visualization Tools  
 
 ---
 
-## ✍️ Author
+## 🏁 Conclusion
 
-Sai Sohan Sajja  
-Machine Learning | Computer Vision | Medical AI  
+This project demonstrates a robust deep learning pipeline for brain tumor detection and segmentation.  
+
+- **ResNet50** delivers highly accurate tumor detection  
+- **ResUNet** provides precise tumor localization  
+
+Together, they form a powerful system capable of assisting medical professionals and improving diagnostic workflows.
 
 ---
+- **Accuracy**: 97.57%
 
-## 🧠 Research Relevance
-
-This project demonstrates deep learning for medical image segmentation, a key area in healthcare AI for automated tumor detection and localization.
+#### Confusion Matrix:

@@ -1,107 +1,160 @@
-# 🧠 Healthcare AI – Brain Tumor Segmentation Using ResUNet
+# 🧠 Brain Tumor Segmentation using Deep Learning
 
-This project performs **pixel-level segmentation** on brain MRI scans to detect and localize tumors using deep learning. A custom **ResUNet architecture** is implemented to generate segmentation masks that highlight tumor regions with high accuracy. The model is trained and evaluated on paired MRI images and corresponding masks, using metrics like the Dice coefficient.
+## 🧠 Overview
 
----
-
-## 🔍 Project Overview
-
-- **Goal**: Detect and highlight tumor regions in brain MRI scans.  
-- **Approach**: Image segmentation using ResUNet architecture.  
-- **Output**: Segmentation mask overlaid on the MRI image for clear tumor visualization.
+This project presents a deep learning-based approach for brain tumor segmentation using MRI scans. The model performs pixel-wise prediction, identifying tumor regions within the brain rather than simply classifying presence or absence.
 
 ---
 
-## 🛠️ Features
+## 🎯 Objective
 
-- ✅ MRI Preprocessing (flattening, resizing)  
-- ✅ Tumor Segmentation using ResUNet  
-- ✅ Visualization of segmentation masks  
-- ✅ Evaluation using Dice Coefficient  
-- ✅ Pre-trained weights included (`weights_seg.hdf5`)
+The goal is to:
+- Segment tumor regions from MRI scans  
+- Learn spatial patterns of tumors  
+- Generate interpretable visual outputs  
+
+---
+
+## 🏗️ Problem Formulation
+
+Binary image segmentation:
+
+| Class | Meaning |
+|------|--------|
+| 0 | Background |
+| 1 | Tumor |
+
+---
+
+## 📊 Dataset
+
+- Input: Brain MRI images  
+- Target: Corresponding segmentation masks  
+
+Each sample contains:
+- MRI image  
+- Ground truth mask  
+
+---
+
+## ⚙️ Methodology
+
+### Data Preprocessing
+- Resizing images  
+- Normalization  
+- Mask alignment  
+
+### Model Architecture
+- CNN-based encoder-decoder model  
+- Encoder extracts features  
+- Decoder reconstructs segmentation mask  
+
+### Training
+- Loss: Binary Crossentropy / Dice Loss  
+- Optimizer: Adam  
+
+### Pipeline
+MRI Image → Preprocessing → Model → Predicted Mask  
+
+---
+
+## 📈 Results
+
+### Quantitative (Add your values)
+
+| Metric | Score |
+|------|------|
+| Dice Coefficient | XX |
+| Accuracy | XX |
+
+---
+
+## 🖼️ Sample Outputs
+
+![Sample 1](outputs/sample1.png)  
+![Sample 2](outputs/sample2.png)  
+
+### Visualization Explanation
+Each sample shows:
+- Original MRI  
+- Ground Truth Mask  
+- Predicted Mask  
+- Overlay comparison  
+
+---
+
+## 📊 Training Visualization
+
+![Training Curve](outputs/training_curve.png)
+
+---
+
+## 🔬 Observations
+
+- Good tumor localization  
+- Strong overlap with ground truth  
+- Minor boundary errors  
+- Small tumors harder to detect  
+
+---
+
+## 💡 Key Contributions
+
+- Pixel-wise tumor segmentation  
+- End-to-end deep learning pipeline  
+- Visual interpretation using overlays  
+
+---
+
+## ⚠️ Limitations
+
+- Depends on dataset quality  
+- Boundary precision is limited  
+- No 3D context (2D slices only)  
+
+---
+
+## 🚀 Future Work
+
+- Use U-Net / advanced architectures  
+- Apply data augmentation  
+- Extend to 3D MRI  
+- Improve boundary detection  
 
 ---
 
 ## 📁 Project Structure
 
-```
-📦 Healthcare_AI_Segmentation/
-├── Copy_of_Healthcare_AI(final).ipynb   # Main notebook
-├── utilities.py                         # Helper functions (preprocessing, visualization)
-├── data.csv                             # Dataset paths/info
-├── data_mask.csv                        # Corresponding mask paths
-├── healthcareAISampleoutput.png         # Sample segmented output
-├── weights_seg.hdf5                     # Trained model weights
-├── ResUNet-MRI.json                     # ResUNet architecture
-├── resnet-50-MRI.json                   # Optional ResNet encoder variant
-```
-
----
-
-## 🧠 Model Architecture: ResUNet
-
-ResUNet combines the **residual connections** of ResNet with the **encoder-decoder** structure of U-Net to achieve high performance in biomedical image segmentation. Key components:
-
-- Convolutional blocks with skip/residual connections  
-- Bottleneck for feature compression  
-- Decoder for upsampling and mask generation
-
----
-
-## 🖼️ Input & Output
-
-- **Input**: Preprocessed brain MRI scan (grayscale image)  
-- **Output**: Segmentation mask (binary) showing tumor area
-
----
-
-## ⚙️ Preprocessing Steps
-
-- Resize all images to a fixed dimension  
-- Normalize pixel intensities  
-- Convert to NumPy arrays  
-- Flatten if required for uniformity
-
----
-
-## 📈 Evaluation Metric
-
-- **Dice Coefficient**  
-  Measures the overlap between the predicted and actual mask:  
-  \[
-  Dice = \frac{2 \cdot |Prediction \cap GroundTruth|}{|Prediction| + |GroundTruth|}
-  \]
+Healthcare_AI/
+├── Copy_of_Healthcare_AI.ipynb  
+├── dataset/  
+├── outputs/  
 
 ---
 
 ## ▶️ How to Run
 
-1. Clone the repository or open the notebook in Colab.  
-2. Upload all required files (`weights_seg.hdf5`, `.csv` files, and `.json` configs).  
-3. Run `Copy_of_Healthcare_AI(final).ipynb` step-by-step.  
-4. Modify paths in `data.csv` and `data_mask.csv` if needed.  
-5. Visualize results and accuracy.
-
----
-
-## 🧪 Sample Output
-
-![Sample Output](healthcareAISampleoutput.png)  
-The mask is overlaid on the original scan to highlight the tumor.
+1. Open notebook in Colab/Jupyter  
+2. Load dataset  
+3. Run all cells  
+4. Train model  
+5. View outputs  
 
 ---
 
 ## 📦 Requirements
 
-Install dependencies:
-
-```bash
-pip install tensorflow numpy matplotlib opencv-python
-```
+pip install tensorflow keras opencv-python numpy matplotlib  
 
 ---
 
 ## ✍️ Author
 
-**Sai Sohan Sajja**  
-AI Enthusiast | Healthcare Innovator | [LinkedIn](#)
+Sai Sohan Sajja  
+Machine Learning | Computer Vision | Medical AI  
+
+---
+
+## 🧠 Research Relevance
+
+This project demonstrates deep learning for medical image segmentation, a key area in healthcare AI for automated tumor detection and localization.

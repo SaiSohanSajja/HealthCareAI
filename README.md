@@ -114,6 +114,8 @@ A hybrid architecture combining:
 | Recall        | 0.99    | 0.96  |
 | F1-score      | 0.98    | 0.97  |
 
+- **Accuracy**: 97.57%
+
 ✅ Strong performance across all metrics  
 ✅ Low false positives and false negatives  
 
@@ -183,4 +185,3 @@ This project demonstrates a robust deep learning pipeline for brain tumor detect
 Together, they form a powerful system capable of assisting medical professionals and improving diagnostic workflows.
 
 ---
-- **Accuracy**: 97.57%
